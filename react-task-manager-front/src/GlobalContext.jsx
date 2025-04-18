@@ -14,7 +14,11 @@ function GlobalProvider({ children }) {
       .catch((err) => console.error(err));
   }, []);
   console.log(tasks);
-  return <GlobalContext.Provider value={{}}>{children}</GlobalContext.Provider>;
+  return (
+    <GlobalContext.Provider value={{ tasks }}>
+      {children}
+    </GlobalContext.Provider>
+  );
 }
 
 export { GlobalContext, GlobalProvider };

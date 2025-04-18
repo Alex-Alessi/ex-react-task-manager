@@ -13,3 +13,23 @@
   text-decoration: none;
   color: white;
 }
+
+.table-item {
+  background-color: rgb(193, 183, 183);
+}
+
+.custom-table {
+  border-spacing: 8px;
+}
+
+.red {
+  background-color: red;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.green {
+  background-color: green;
+}
