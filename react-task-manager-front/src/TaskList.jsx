@@ -5,7 +5,7 @@ import Table from "react-bootstrap/Table";
 import "./App.css";
 
 export default function TaskList() {
-  const { tasks } = useContext(GlobalContext);
+  const { tasksMemo } = useContext(GlobalContext);
 
   return (
     <div>
@@ -20,7 +20,7 @@ export default function TaskList() {
           </tr>
         </thead>
         <tbody>
-          {tasks.map((task) => (
+          {tasksMemo.map((task) => (
             <tr key={task.id} className="table-item">
               <TaskRow task={task} />
             </tr>

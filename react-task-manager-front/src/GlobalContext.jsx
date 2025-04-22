@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useMemo } from "react";
 
 const GlobalContext = createContext();
 
@@ -10,12 +10,20 @@ function GlobalProvider({ children }) {
 
     fetch(`${apiUrl}/tasks`)
       .then((res) => res.json())
-      .then((data) => setTasks(data))
+      .then((data) => {
+        console.log("dati ricevuti"), setTasks(data);
+      })
       .catch((err) => console.error(err));
   }, []);
-  console.log(tasks);
+
+  const tasksMemo = useMemo(() => {
+    return tasks;
+  }, [tasks]);
+
+  console.log("tasksMemo aggiornato", tasksMemo);
+
   return (
-    <GlobalContext.Provider value={{ tasks }}>
+    <GlobalContext.Provider value={{ tasksMemo }}>
       {children}
     </GlobalContext.Provider>
   );

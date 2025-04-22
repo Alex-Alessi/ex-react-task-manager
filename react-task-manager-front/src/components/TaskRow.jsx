@@ -1,7 +1,10 @@
 import "../App.css";
+import { memo } from "react";
 
-export default function TaskRow(task) {
-  const { id, title, status, createdAt } = task.task;
+function TaskRow({ task }) {
+  const { id, title, status, createdAt } = task;
+
+  console.log("task props", task);
 
   const statusColor = () => {
     if (status === "To do") {
@@ -22,3 +25,5 @@ export default function TaskRow(task) {
     </>
   );
 }
+
+export default memo(TaskRow);
