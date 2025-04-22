@@ -1,29 +1,17 @@
 import { createContext, useState, useEffect, useMemo } from "react";
+import useTasks from "./useTasks";
 
 const GlobalContext = createContext();
 
 function GlobalProvider({ children }) {
-  const [tasks, setTasks] = useState([]);
-
-  useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL;
-
-    fetch(`${apiUrl}/tasks`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("dati ricevuti"), setTasks(data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
-  const tasksMemo = useMemo(() => {
-    return tasks;
-  }, [tasks]);
+  const { getTasks, addTask, removeTask, updateTask } = useTasks();
 
   console.log("tasksMemo aggiornato", tasksMemo);
 
   return (
-    <GlobalContext.Provider value={{ tasksMemo }}>
+    <GlobalContext.Provider
+      value={{ getTasks, addTask, removeTask, updateTask }}
+    >
       {children}
     </GlobalContext.Provider>
   );
