@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import useTasks from "./useTasks";
 
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\\,.<>?/`~";
 
@@ -9,18 +10,33 @@ export default function AddTask() {
   const [msgTitle, setMsgTitle] = useState("");
   const descrizioneRef = useRef();
   const statoRef = useRef();
+  const { addTask } = useTasks();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    const valDescription = descrizioneRef.current.value;
+    const valstatus = statoRef.current.value;
     e.preventDefault();
     if (!title || title.split("").some((char) => symbols.includes(char))) {
       console.log("Campo non valido!");
       return;
     } else {
-      console.log({
-        "title: ": title,
-        "descrizione: ": descrizioneRef.current.value,
-        "stato: ": statoRef.current.value,
+      const result = await addTask({
+        title,
+        description: valDescription,
+        status: valstatus,
       });
+
+      if (result.success) {
+        alert("Task aggiunta con successo");
+        setTitle("");
+        valDescription = "";
+        valstatus = "To do";
+        return;
+      } else {
+        alert(result.message);
+      }
+
+      addTask({ title, description: valDescription, status: valstatus });
     }
   };
   return (

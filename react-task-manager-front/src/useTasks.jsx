@@ -2,13 +2,13 @@ import { useState, useEffect, useMemo } from "react";
 
 export default function useTasks() {
   const [tasks, setTasks] = useState([]);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL;
     fetch(`${apiUrl}/tasks`)
       .then((res) => res.json())
       .then((data) => setTasks(data))
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   }, []);
 
   const tasksMemo = useMemo(() => {
@@ -19,7 +19,33 @@ export default function useTasks() {
     return tasksMemo;
   }
 
-  function addTask(id) {}
+  function addTask({ title, description, status }) {
+    const newTask = {
+      title: title,
+      description: description,
+      status: status,
+    };
+    fetch(`${apiUrl}/tasks`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newTask),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.success) {
+          console.error(data.message);
+          return { success: false, message: data.message };
+        }
+        setTasks((prev) => [...prev, data.task]);
+        return { success: true, task: data.task };
+      })
+      .catch((err) => {
+        console.error("Errore: ", err);
+        return { success: false, message: err.message };
+      });
+  }
   function removeTask(id) {}
   function updateTask(id) {}
 
