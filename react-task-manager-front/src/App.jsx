@@ -4,6 +4,7 @@ import { GlobalProvider } from "./GlobalContext";
 import TaskList from "./TaskList";
 import AddTask from "./AddTask";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 function App() {
   return (

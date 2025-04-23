@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export default function useTasks() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    fetch(apiUrl)
+    fetch(`${apiUrl}/tasks`)
       .then((res) => res.json())
       .then((data) => setTasks(data))
       .catch((error) => console.log(error));

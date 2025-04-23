@@ -8,11 +8,11 @@ function TaskRow({ task }) {
 
   const statusColor = () => {
     if (status === "To do") {
-      return "red";
+      return "bg-danger";
     } else if (status === "Doing") {
-      return "yellow";
+      return "bg-warning";
     } else {
-      return "green";
+      return "bg-success";
     }
   };
 

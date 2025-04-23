@@ -3,8 +3,8 @@ import "../App.css";
 
 export default function Navbar() {
   return (
-    <nav className="navbar">
-      <ul className="nav-list">
+    <nav className="navbar ">
+      <ul className="nav-list mt-3">
         <li>
           <NavLink to="/" className="nav-link">
             Lista Task
