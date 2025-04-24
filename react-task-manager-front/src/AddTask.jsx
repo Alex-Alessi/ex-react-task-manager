@@ -14,7 +14,7 @@ export default function AddTask() {
 
   const handleSubmit = async (e) => {
     const valDescription = descrizioneRef.current.value;
-    const valstatus = statoRef.current.value;
+    const valStatus = statoRef.current.value;
     e.preventDefault();
     if (!title || title.split("").some((char) => symbols.includes(char))) {
       console.log("Campo non valido!");
@@ -23,14 +23,16 @@ export default function AddTask() {
       const result = await addTask({
         title,
         description: valDescription,
-        status: valstatus,
+        status: valStatus,
       });
+
+      console.log("Risultato addTask:", result);
 
       if (result.success) {
         alert("Task aggiunta con successo");
         setTitle("");
-        valDescription = "";
-        valstatus = "To do";
+        descrizioneRef.current.value = "";
+        statoRef.current.value = "To do";
         return;
       } else {
         alert(result.message);

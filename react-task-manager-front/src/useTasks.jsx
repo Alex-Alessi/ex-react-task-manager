@@ -19,32 +19,34 @@ export default function useTasks() {
     return tasksMemo;
   }
 
-  function addTask({ title, description, status }) {
+  async function addTask({ title, description, status }) {
     const newTask = {
       title: title,
       description: description,
       status: status,
     };
-    fetch(`${apiUrl}/tasks`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newTask),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.success) {
-          console.error(data.message);
-          return { success: false, message: data.message };
-        }
-        setTasks((prev) => [...prev, data.task]);
-        return { success: true, task: data.task };
-      })
-      .catch((err) => {
-        console.error("Errore: ", err);
-        return { success: false, message: err.message };
+    try {
+      const res = await fetch(`${apiUrl}/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
       });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+
+      setTasks((prev) => [...prev, data.task]);
+
+      return { success: true, task: data.task };
+    } catch (err) {
+      console.error("Errore:", err);
+      return { success: false, message: err.message };
+    }
   }
   function removeTask(id) {}
   function updateTask(id) {}
