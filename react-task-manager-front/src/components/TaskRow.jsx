@@ -1,10 +1,11 @@
 import "../App.css";
 import { memo } from "react";
+import { Link } from "react-router-dom";
 
 function TaskRow({ task }) {
   const { id, title, status, createdAt } = task;
 
-  console.log("task props", task);
+  // console.log("task props", task);
 
   const statusColor = () => {
     if (status === "To do") {
@@ -19,7 +20,9 @@ function TaskRow({ task }) {
   return (
     <>
       <td>{id}</td>
-      <td>{title}</td>
+      <td>
+        <Link to={`/tasks/${id}`}>{title}</Link>
+      </td>
       <td className={statusColor()}>{status}</td>
       <td>{createdAt}</td>
     </>
