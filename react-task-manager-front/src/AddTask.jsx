@@ -29,7 +29,7 @@ export default function AddTask() {
       console.log("Risultato addTask:", result);
 
       if (result.success) {
-        alert("Task aggiunta con successo");
+        alert("Task aggiunta con successo!");
         setTitle("");
         descrizioneRef.current.value = "";
         statoRef.current.value = "To do";

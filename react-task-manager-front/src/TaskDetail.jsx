@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import useTasks from "./useTasks";
+import { useNavigate } from "react-router-dom";
 
 export default function TaskDetail() {
   const { id } = useParams();
   const apiUrl = import.meta.env.VITE_API_URL;
   const [task, setTask] = useState([]);
+  const navigate = useNavigate();
+  const { removeTask } = useTasks();
 
   useEffect(() => {
     console.log("useEffect");
@@ -32,7 +36,23 @@ export default function TaskDetail() {
       <p>
         <strong>Data di creazione:</strong> {task.createdAt}
       </p>
-      <button onClick={() => console.log("Elimino task")}>Elimina Task</button>
+      <button
+        onClick={async () => {
+          try {
+            const result = await removeTask(id);
+            if (result.success) {
+              alert("Task eliminata con successo!");
+              navigate("/tasks");
+            } else {
+              alert(`Errore: ${result.message}`);
+            }
+          } catch (err) {
+            alert(`Errore: ${err.message}`);
+          }
+        }}
+      >
+        Elimina Task
+      </button>
     </div>
   );
 }
