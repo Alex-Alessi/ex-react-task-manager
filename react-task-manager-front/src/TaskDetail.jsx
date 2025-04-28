@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useTasks from "./useTasks";
 import { useNavigate } from "react-router-dom";
+import Modal from "./components/Modal";
 
 export default function TaskDetail() {
   const { id } = useParams();
@@ -9,6 +10,7 @@ export default function TaskDetail() {
   const [task, setTask] = useState([]);
   const navigate = useNavigate();
   const { removeTask } = useTasks();
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     console.log("useEffect");
@@ -22,8 +24,22 @@ export default function TaskDetail() {
       });
   }, [id, apiUrl]);
 
+  function onClose() {
+    setShowModal(false);
+  }
+
+  async function onConfirm() {
+    const result = await removeTask(id);
+    if (result.success) {
+      alert("Task eliminata con successo");
+      navigate("/tasks");
+    } else {
+      alert("impossibile eliminare la task");
+    }
+  }
+
   return (
-    <div className="ms-3 mt-3">
+    <div id="detail-page" className="ms-3 mt-3">
       <p>
         <strong>Nome:</strong> {task.title}
       </p>
@@ -36,23 +52,16 @@ export default function TaskDetail() {
       <p>
         <strong>Data di creazione:</strong> {task.createdAt}
       </p>
-      <button
-        onClick={async () => {
-          try {
-            const result = await removeTask(id);
-            if (result.success) {
-              alert("Task eliminata con successo!");
-              navigate("/tasks");
-            } else {
-              alert(`Errore: ${result.message}`);
-            }
-          } catch (err) {
-            alert(`Errore: ${err.message}`);
-          }
-        }}
-      >
-        Elimina Task
-      </button>
+      <button onClick={() => setShowModal(true)}>Elimina Task</button>
+      {showModal && (
+        <Modal
+          title="Conferma eliminazione"
+          content="Sei sicuro di voler eliminare questa task?"
+          show={showModal}
+          onClose={onClose}
+          onConfirm={onConfirm}
+        />
+      )}
     </div>
   );
 }
