@@ -24,16 +24,19 @@ export default function Modal({
           <BootstrapModal.Title>{title}</BootstrapModal.Title>
         </BootstrapModal.Header>
 
-        <BootstrapModal.Body>
-          <p>{content}</p>
-        </BootstrapModal.Body>
+        <BootstrapModal.Body>{content}</BootstrapModal.Body>
 
         <BootstrapModal.Footer>
           <Button variant="secondary" onClick={onClose}>
             Annulla
           </Button>
-          <Button variant="primary" onClick={onConfirm}>
-            Conferma
+          <Button
+            variant={
+              confirmText.toLowerCase() === "elimina" ? "danger" : "success"
+            }
+            onClick={onConfirm}
+          >
+            {confirmText}
           </Button>
         </BootstrapModal.Footer>
       </BootstrapModal.Dialog>

@@ -66,7 +66,36 @@ export default function useTasks() {
       return { success: false, message: err.message };
     }
   }
-  function updateTask(id) {}
+
+  async function updateTask(updatedTask) {
+    console.log("🛠️ updatedTask che sto per inviare:", updatedTask);
+    try {
+      const res = await fetch(`${apiUrl}/tasks/${updatedTask.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTask),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+      setTasks((prev) =>
+        prev.map((task) => {
+          if (task.id == updatedTask.id) {
+            return updatedTask;
+          } else {
+            return task;
+          }
+        })
+      );
+      return { success: true };
+    } catch (err) {
+      console.error(err);
+      return { success: false, message: err.message };
+    }
+  }
 
   return { getTasks, addTask, removeTask, updateTask };
 }

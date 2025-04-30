@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import useTasks from "./useTasks";
 import { useNavigate } from "react-router-dom";
 import Modal from "./components/Modal";
+import EditTaskModal from "./components/EditTaskModal";
 
 export default function TaskDetail() {
   const { id } = useParams();
@@ -10,7 +11,9 @@ export default function TaskDetail() {
   const [task, setTask] = useState([]);
   const navigate = useNavigate();
   const { removeTask } = useTasks();
+  const { updateTask } = useTasks();
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     console.log("useEffect");
@@ -25,6 +28,7 @@ export default function TaskDetail() {
   }, [id, apiUrl]);
 
   function onClose() {
+    setShowEditModal(false);
     setShowModal(false);
   }
 
@@ -34,7 +38,19 @@ export default function TaskDetail() {
       alert("Task eliminata con successo");
       navigate("/tasks");
     } else {
-      alert("impossibile eliminare la task");
+      alert("Impossibile eliminare la task");
+    }
+  }
+
+  async function onSave(modifiedTask) {
+    const result = await updateTask(modifiedTask);
+    console.log("Questo è il result", result);
+    if (result.success) {
+      alert("Task modificata con successo");
+      setShowEditModal(false);
+      navigate("/tasks");
+    } else {
+      alert("Impossibile modificare la task");
     }
   }
 
@@ -52,6 +68,16 @@ export default function TaskDetail() {
       <p>
         <strong>Data di creazione:</strong> {task.createdAt}
       </p>
+      <button onClick={() => setShowEditModal(true)}>Modifica task</button>
+      {showEditModal && (
+        <EditTaskModal
+          show={showEditModal}
+          onClose={onClose}
+          task={task}
+          onSave={onSave}
+        />
+      )}
+
       <button onClick={() => setShowModal(true)}>Elimina Task</button>
       {showModal && (
         <Modal
@@ -60,6 +86,7 @@ export default function TaskDetail() {
           show={showModal}
           onClose={onClose}
           onConfirm={onConfirm}
+          confirmText="Elimina"
         />
       )}
     </div>
