@@ -17,6 +17,8 @@ function TaskRow({ task }) {
     }
   };
 
+  const date = new Date(createdAt).toLocaleString("it-IT");
+
   return (
     <>
       <td>{id}</td>
@@ -24,7 +26,7 @@ function TaskRow({ task }) {
         <Link to={`/tasks/${id}`}>{title}</Link>
       </td>
       <td className={statusColor()}>{status}</td>
-      <td>{createdAt}</td>
+      <td>{date}</td>
     </>
   );
 }

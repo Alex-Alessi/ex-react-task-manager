@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo, useState } from "react";
 import { GlobalContext } from "./GlobalContext";
 import TaskRow from "./components/TaskRow";
 import Table from "react-bootstrap/Table";
@@ -7,6 +7,47 @@ import "./App.css";
 export default function TaskList() {
   const { getTasks } = useContext(GlobalContext);
   const tasks = getTasks();
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState(1);
+
+  function handleSort(colonna) {
+    if (sortBy === colonna) {
+      if (sortOrder == 1) {
+        setSortOrder(-1);
+      } else {
+        setSortOrder(1);
+      }
+    } else {
+      setSortBy(colonna);
+      setSortOrder(1);
+    }
+  }
+
+  const sortMemo = useMemo(() => {
+    const sorted = [...tasks];
+    if (sortBy === "title") {
+      const titleOrdered = sorted.sort(
+        (a, b) => a.title.localeCompare(b.title) * sortOrder
+      );
+      return titleOrdered;
+    } else if (sortBy === "status") {
+      const ordine = ["To do", "Doing", "Done"];
+      const statusOrdered = sorted.sort((a, b) => {
+        return (
+          (ordine.indexOf(a.status) - ordine.indexOf(b.status)) * sortOrder
+        );
+      });
+      return statusOrdered;
+    } else if (sortBy === "createdAt") {
+      const datesOrdered = sorted.sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return (dateB - dateA) * sortOrder;
+      });
+      return datesOrdered;
+    }
+    return sortMemo;
+  }, [tasks, sortBy, sortOrder]);
 
   return (
     <div>
@@ -15,13 +56,13 @@ export default function TaskList() {
         <thead>
           <tr>
             <th>#</th>
-            <th>Nome</th>
-            <th>Stato</th>
-            <th>Data di Creazione</th>
+            <th onClick={() => handleSort("title")}>Nome</th>
+            <th onClick={() => handleSort("status")}>Stato</th>
+            <th onClick={() => handleSort("createdAt")}>Data di Creazione</th>
           </tr>
         </thead>
         <tbody>
-          {tasks.map((task) => (
+          {sortMemo.map((task) => (
             <tr key={task.id} className="table-item">
               <TaskRow task={task} />
             </tr>
