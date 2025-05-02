@@ -43,3 +43,8 @@
   backdrop-filter: blur(2px);
   background-color: rgba(0, 0, 0, 0.3);
 }
+
+.thHover:hover {
+  background-color: rgb(218, 215, 215);
+  cursor: pointer;
+}

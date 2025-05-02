@@ -56,9 +56,15 @@ export default function TaskList() {
         <thead>
           <tr>
             <th>#</th>
-            <th onClick={() => handleSort("title")}>Nome</th>
-            <th onClick={() => handleSort("status")}>Stato</th>
-            <th onClick={() => handleSort("createdAt")}>Data di Creazione</th>
+            <th onClick={() => handleSort("title")} className="thHover">
+              Nome
+            </th>
+            <th onClick={() => handleSort("status")} className="thHover">
+              Stato
+            </th>
+            <th onClick={() => handleSort("createdAt")} className="thHover">
+              Data di Creazione
+            </th>
           </tr>
         </thead>
         <tbody>
