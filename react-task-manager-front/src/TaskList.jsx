@@ -1,14 +1,25 @@
-import { useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { GlobalContext } from "./GlobalContext";
 import TaskRow from "./components/TaskRow";
 import Table from "react-bootstrap/Table";
 import "./App.css";
+
+function debounce(callback, delay) {
+  let timer;
+  return (value) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      callback(value);
+    }, delay);
+  };
+}
 
 export default function TaskList() {
   const { getTasks } = useContext(GlobalContext);
   const tasks = getTasks();
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   function handleSort(colonna) {
     if (sortBy === colonna) {
@@ -23,8 +34,20 @@ export default function TaskList() {
     }
   }
 
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setSearchQuery(value);
+    }, 1000),
+    []
+  );
+
   const sortMemo = useMemo(() => {
-    const sorted = [...tasks];
+    const tasksFiltered = tasks.filter((task) =>
+      task.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const sorted = [...tasksFiltered];
+
     if (sortBy === "title") {
       const titleOrdered = sorted.sort(
         (a, b) => a.title.localeCompare(b.title) * sortOrder
@@ -47,11 +70,18 @@ export default function TaskList() {
       return datesOrdered;
     }
     return sortMemo;
-  }, [tasks, sortBy, sortOrder]);
+  }, [tasks, sortBy, sortOrder, searchQuery]);
 
   return (
     <div>
-      <h2>Lista dei Task</h2>
+      <div className="ms-2">
+        <h2 className="my-2">Lista dei Task</h2>
+        <input
+          className="mb-3"
+          placeholder="Cerca task..."
+          onChange={(e) => debouncedSearch(e.target.value)}
+        ></input>
+      </div>
       <Table striped bordered hover className="custom-table">
         <thead>
           <tr>
